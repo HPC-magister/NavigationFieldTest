@@ -6,11 +6,11 @@ using System.Text;
 namespace NavigField
 {
     class GuidanseFieldSpace
-    {
-        private Field[,] GuidanseFieldArray;
-
-        private int xSize;
-        private int ySize;
+    {       
+        Field[,] GuidanseFieldArray;
+        
+        int xSize;
+        int ySize;
 
         public GuidanseFieldSpace(int xSize_tmp, int ySize_tmp)
         {
@@ -21,14 +21,14 @@ namespace NavigField
 
             for (int i = 0; i < xSize; i++)
                 for (int j = 0; j < ySize; j++)
-                    GuidanseFieldArray[i, j] = new Field(false, 0, 0, 0, 0);
+                    GuidanseFieldArray[i, j] = new Field(false, 0, 0, 0, 0, 0, 0);
 
         }
 
-        public int SetField(bool isActive, int x, int y, double angle, double cost) {
+        public int SetField(bool isActive, int x, int y, double angle, double cost, int xPredecessor, int yPredecessor) {
             if (x < xSize && y < ySize && x > -1 && y> -1 && GuidanseFieldArray.Length > 0 )
             {
-                GuidanseFieldArray[x,y].Update(isActive, x, y, angle, cost);
+                GuidanseFieldArray[x,y].Update(isActive, x, y, angle, cost, xPredecessor, yPredecessor);
                 return 0;
             }
             else

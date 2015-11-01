@@ -52,11 +52,11 @@ namespace NavigField
             
             
             GuidanseFieldSpace1 = new GuidanseFieldSpace(10, 5);
-            GuidanseFieldSpace1.SetField(true, 0, 0, PI / 4, 10);
-            GuidanseFieldSpace1.SetField(true, 0, 1, -PI / 4, 10);
-            GuidanseFieldSpace1.SetField(true, 1, 0, PI / 2, 10);
-            GuidanseFieldSpace1.SetField(true, 1, 1, PI * 3 / 4, 10);
-            GuidanseFieldSpace1.SetField(true, 1, 2, PI, 10);
+            GuidanseFieldSpace1.SetField(true, 0, 0, PI / 4, 0, 0,0);
+            GuidanseFieldSpace1.SetField(true, 0, 1, -PI / 4, 0, 0,0);
+            GuidanseFieldSpace1.SetField(true, 1, 0, PI / 2, 0, 0, 0);
+            GuidanseFieldSpace1.SetField(true, 1, 1, PI * 3 / 4, 0, 0, 0);
+            GuidanseFieldSpace1.SetField(true, 1, 2, PI, 0, 0, 0);
             
 
             base.Initialize();
@@ -123,6 +123,10 @@ namespace NavigField
             System.Threading.Thread.Sleep(10);
             */
 
+
+            int x;
+            int y;
+
             int dist = 100;
 
             arrow.Begin();
@@ -131,7 +135,7 @@ namespace NavigField
 
                 foreach(Field e in GuidanseFieldSpace1.GetArayOfFields()) {
                     if (e.IsActive()) {
-                        arrowDestination = new Rectangle(200 + e.GetXPos() * dist, 200 + e.GetYPos() * dist, (int)e.GetCost()*10, (int)e.GetCost());
+                        arrowDestination = new Rectangle(200 + e.GetXPos() * dist, 200 + e.GetYPos() * dist, 100, 10);
 
                         arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)e.GetAngle(), new Vector2(132, 13), SpriteEffects.None, 0);
                     }
