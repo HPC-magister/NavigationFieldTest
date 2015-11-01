@@ -17,12 +17,14 @@ namespace NavigField
     public class Game1 : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+        SpriteBatch arrow;
+        SpriteFont SpriteFont1;
         Texture2D arrowTexture;
         Rectangle arrowDestination;
         Rectangle arrowSource;
         Color bckgrColor;
-        double angle;
+                
+        GuidanseFieldSpace GuidanseFieldSpace1;
 
         public Game1()
         {
@@ -39,13 +41,23 @@ namespace NavigField
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            this.Window.Title = "Field";
+            this.Window.Title = "Navigation Field";
             this.IsMouseVisible = true;
-            arrowSource = new Rectangle(0, 0, 265, 27);
-            arrowDestination = new Rectangle(0, 0, 100, 10);
-            bckgrColor = Color.Gray;
-            angle = Math.PI;
 
+            arrowSource = new Rectangle(0, 0, 265, 27);
+            arrowDestination = new Rectangle(200, 200, 100, 10);
+
+            bckgrColor = Color.Gray;
+            double PI = Math.PI;
+            
+            
+            GuidanseFieldSpace1 = new GuidanseFieldSpace(10, 5);
+            GuidanseFieldSpace1.SetField(true, 0, 0, PI / 4, 0, 0,0);
+            GuidanseFieldSpace1.SetField(true, 0, 1, -PI / 4, 0, 0,0);
+            GuidanseFieldSpace1.SetField(true, 1, 0, PI / 2, 0, 0, 0);
+            GuidanseFieldSpace1.SetField(true, 1, 1, PI * 3 / 4, 0, 0, 0);
+            GuidanseFieldSpace1.SetField(true, 1, 2, PI, 0, 0, 0);
+            
 
             base.Initialize();
         }
@@ -57,8 +69,10 @@ namespace NavigField
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            arrow = new SpriteBatch(GraphicsDevice);            
             arrowTexture = Content.Load<Texture2D>("arrow");
+            SpriteFont1 = Content.Load<SpriteFont>("SpriteFont1");
+            
 
             // TODO: use this.Content to load your game content here
         }
@@ -96,18 +110,45 @@ namespace NavigField
         {
             
             GraphicsDevice.Clear(bckgrColor);
+            /*
+            row.Begin();
+                //spriteBatch.Draw(arrowTexture, Vector2.Zero, Color.Gray);
+                angle += 0.01;
+                row.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)(angle), new Vector2(132, 13), SpriteEffects.None, 0);
+                arrowDestination.X += 100;
+                row.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, -(float)(angle), new Vector2(132, 13), SpriteEffects.None, 0);
+                arrowDestination.X -= 100;
+            row.End();
 
-            spriteBatch.Begin();
-            //spriteBatch.Draw(arrowTexture, Vector2.Zero, Color.Gray);
-            angle += 0.01;
-            spriteBatch.Draw(arrowTexture, arrowDestination, arrowSource, Color.Gold, (float)(angle), new Vector2(0, 0), SpriteEffects.None, 0);
-            spriteBatch.End();
+            System.Threading.Thread.Sleep(10);
+            */
 
+
+            int x;
+            int y;
+
+            int dist = 100;
+
+            arrow.Begin();
+
+                //Field[,] ArrayOfFields = GuidanseFieldSpace1.GetArayOfFields();
+
+                foreach(Field e in GuidanseFieldSpace1.GetArayOfFields()) {
+                    if (e.IsActive()) {
+                        arrowDestination = new Rectangle(200 + e.GetXPos() * dist, 200 + e.GetYPos() * dist, 100, 10);
+
+                        arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)e.GetAngle(), new Vector2(132, 13), SpriteEffects.None, 0);
+                    }
+                    
+                }
+                arrow.DrawString(SpriteFont1, 
+                    "Count of fields:   " + GuidanseFieldSpace1.GetCountOfFields().ToString() + 
+                    "\nCount of active fields:   " + GuidanseFieldSpace1.GetCountOfActiveFields(), new Vector2(0,0), Color.Black);
+
+            arrow.End();
             // TODO: Add your drawing code here
 
-            base.Draw(gameTime);
-            System.Threading.Thread.Sleep(10);
-            
+            base.Draw(gameTime);                     
             
         }
     }

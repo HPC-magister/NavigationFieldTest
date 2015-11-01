@@ -1,1 +1,6 @@
 c:\users\hpc-magistr\documents\visual studio 2015\Projects\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache
+T:\НИРМ\Код\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache
+Q:\НИРМ\Код\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache
+C:\Users\magistr\Desktop\HPC-magister\Код\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache
+V:\НИРМ\Код\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache
+J:\НИРМ\Код\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache

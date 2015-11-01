@@ -5,7 +5,7 @@ using System.Text;
 
 namespace NavigField
 {
-    class NavigationField : Field
+    class NavigationField
     {
     }
 }
