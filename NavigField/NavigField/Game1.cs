@@ -24,7 +24,7 @@ namespace NavigField
         Rectangle arrowSource;
         Color bckgrColor;
                 
-        GuidanseFieldSpace GuidanseFieldSpace1;
+        FieldSpace GuidanseFieldSpace1;
 
         public Game1()
         {
@@ -49,14 +49,13 @@ namespace NavigField
 
             bckgrColor = Color.Gray;
             double PI = Math.PI;
-            
-            
-            GuidanseFieldSpace1 = new GuidanseFieldSpace(10, 5);
+                        
+            GuidanseFieldSpace1 = new FieldSpace(10, 5);
             GuidanseFieldSpace1.SetField(true, 0, 0, PI / 4, 10);
-            GuidanseFieldSpace1.SetField(true, 0, 1, -PI / 4, 10);
+            GuidanseFieldSpace1.SetField(true, 0, 1, -PI / 4, 5);
             GuidanseFieldSpace1.SetField(true, 1, 0, PI / 2, 10);
-            GuidanseFieldSpace1.SetField(true, 1, 1, PI * 3 / 4, 10);
-            GuidanseFieldSpace1.SetField(true, 1, 2, PI, 10);
+            GuidanseFieldSpace1.SetField(true, 1, 1, PI * 3 / 4, 5);
+            GuidanseFieldSpace1.SetField(true, 1, 2, PI, 7);
             
 
             base.Initialize();
@@ -123,21 +122,28 @@ namespace NavigField
             System.Threading.Thread.Sleep(10);
             */
 
-            int dist = 100;
+            int dist = 100;            
 
             arrow.Begin();
 
-                //Field[,] ArrayOfFields = GuidanseFieldSpace1.GetArayOfFields();
+            NavigGridCell NF = new NavigGridCell();
 
-                foreach(Field e in GuidanseFieldSpace1.GetArayOfFields()) {
-                    if (e.IsActive()) {
-                        arrowDestination = new Rectangle(200 + e.GetXPos() * dist, 200 + e.GetYPos() * dist, (int)e.GetCost()*10, (int)e.GetCost());
+            //Field[,] ArrayOfFields = GuidanseFieldSpace1.GetArayOfFields();
 
-                        arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)e.GetAngle(), new Vector2(132, 13), SpriteEffects.None, 0);
-                    }
+            
                     
-                }
-                arrow.DrawString(SpriteFont1, 
+                    for(int i = 0; i < GuidanseFieldSpace1.xSize; i++)
+                        for (int j = 0; j < GuidanseFieldSpace1.ySize; j++)
+                            {
+                                GridCell GridCell1 = GuidanseFieldSpace1.FieldArray[i, j];
+                    
+                                if (GridCell1.isActive) {
+                                    arrowDestination = new Rectangle(200 + GridCell1.xPos * dist, 200 + GridCell1.yPos * dist, (int)GridCell1.amplitude*10, (int)GridCell1.amplitude);                   
+                                    arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)GridCell1.angle, new Vector2(132, 13), SpriteEffects.None, 0);
+                            }
+                    }
+
+                    arrow.DrawString(SpriteFont1, 
                     "Count of fields:   " + GuidanseFieldSpace1.GetCountOfFields().ToString() + 
                     "\nCount of active fields:   " + GuidanseFieldSpace1.GetCountOfActiveFields(), new Vector2(0,0), Color.Black);
 

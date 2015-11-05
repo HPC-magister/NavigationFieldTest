@@ -1,0 +1,2 @@
+T:\Projects\NavigationFieldTest\WindowsGame1\WindowsGame1\obj\x86\Debug\WindowsGame1.csprojResolveAssemblyReference.cache
+T:\Projects\NavigationFieldTest\WindowsGame1\WindowsGame1\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt

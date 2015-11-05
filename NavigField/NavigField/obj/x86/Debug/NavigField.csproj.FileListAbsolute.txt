@@ -106,7 +106,7 @@ T:\Projects\NavigationFieldTest\NavigField\NavigField\bin\x86\Debug\Microsoft.Xn
 T:\Projects\NavigationFieldTest\NavigField\NavigField\bin\x86\Debug\Microsoft.Xna.Framework.Graphics.xml
 T:\Projects\NavigationFieldTest\NavigField\NavigField\bin\x86\Debug\Microsoft.Xna.Framework.GamerServices.xml
 T:\Projects\NavigationFieldTest\NavigField\NavigField\bin\x86\Debug\Microsoft.Xna.Framework.Input.Touch.xml
-T:\Projects\NavigationFieldTest\NavigField\NavigField\obj\x86\Debug\NavigField.csprojResolveAssemblyReference.cache
 T:\Projects\NavigationFieldTest\NavigField\NavigField\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 T:\Projects\NavigationFieldTest\NavigField\NavigField\obj\x86\Debug\NavigField.exe
 T:\Projects\NavigationFieldTest\NavigField\NavigField\obj\x86\Debug\NavigField.pdb
+T:\Projects\NavigationFieldTest\NavigField\NavigField\obj\x86\Debug\NavigField.csprojResolveAssemblyReference.cache

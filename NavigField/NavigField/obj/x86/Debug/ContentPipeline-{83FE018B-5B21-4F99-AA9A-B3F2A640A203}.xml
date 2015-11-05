@@ -8,7 +8,7 @@
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
       <Output>T:\Projects\NavigationFieldTest\NavigField\NavigField\bin\x86\Debug\Content\arrow.xnb</Output>
-      <Time>2015-10-28T10:39:10+03:00</Time>
+      <Time>2015-11-02T00:28:33.2347958+03:00</Time>
     </Item>
     <Item>
       <Source>SpriteFont1.spritefont</Source>
@@ -17,7 +17,7 @@
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
       <Output>T:\Projects\NavigationFieldTest\NavigField\NavigField\bin\x86\Debug\Content\SpriteFont1.xnb</Output>
-      <Time>2015-10-29T17:42:40+03:00</Time>
+      <Time>2015-11-02T00:21:24.3136061+03:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>

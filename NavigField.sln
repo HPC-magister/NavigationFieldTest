@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigField", "NavigField\NavigField\NavigField.csproj", "{6B60C940-BFEA-4064-9F49-CA0386F8D018}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "NavigFieldContent", "NavigField\NavigFieldContent\NavigFieldContent.contentproj", "{83FE018B-5B21-4F99-AA9A-B3F2A640A203}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NavigFieldContent", "NavigField\NavigFieldContent\NavigFieldContent.contentproj", "{83FE018B-5B21-4F99-AA9A-B3F2A640A203}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
