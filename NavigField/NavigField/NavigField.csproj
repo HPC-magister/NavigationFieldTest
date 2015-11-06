@@ -57,10 +57,11 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class1.cs" />
     <Compile Include="GridCell.cs" />
     <Compile Include="FieldSpace.cs" />
     <Compile Include="NavigationFieldSpace.cs" />
-    <Compile Include="NavigGridCell.cs" />
+    <Compile Include="NavigationGridCell.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

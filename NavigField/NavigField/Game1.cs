@@ -51,12 +51,12 @@ namespace NavigField
             double PI = Math.PI;
                         
             GuidanseFieldSpace1 = new FieldSpace(10, 5);
-            GuidanseFieldSpace1.SetField(true, 0, 0, PI / 4, 10);
-            GuidanseFieldSpace1.SetField(true, 0, 1, -PI / 4, 5);
-            GuidanseFieldSpace1.SetField(true, 1, 0, PI / 2, 10);
-            GuidanseFieldSpace1.SetField(true, 1, 1, PI * 3 / 4, 5);
-            GuidanseFieldSpace1.SetField(true, 1, 2, PI, 7);
-            
+            GuidanseFieldSpace1.UpdateCell(false, 0, 0, PI / 4, 10);
+            GuidanseFieldSpace1.UpdateCell(false, 0, 1, -PI / 4, 5);
+            GuidanseFieldSpace1.UpdateCell(false, 1, 0, PI / 2, 10);
+            GuidanseFieldSpace1.UpdateCell(false, 1, 1, PI * 3 / 4, 5);
+            GuidanseFieldSpace1.UpdateCell(false, 1, 2, PI, 7);
+
 
             base.Initialize();
         }
@@ -126,7 +126,7 @@ namespace NavigField
 
             arrow.Begin();
 
-            NavigGridCell NF = new NavigGridCell();
+            
 
             //Field[,] ArrayOfFields = GuidanseFieldSpace1.GetArayOfFields();
 
@@ -137,7 +137,7 @@ namespace NavigField
                             {
                                 GridCell GridCell1 = GuidanseFieldSpace1.FieldArray[i, j];
                     
-                                if (GridCell1.isActive) {
+                                if (!GridCell1.isObstacle) {
                                     arrowDestination = new Rectangle(200 + GridCell1.xPos * dist, 200 + GridCell1.yPos * dist, (int)GridCell1.amplitude*10, (int)GridCell1.amplitude);                   
                                     arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)GridCell1.angle, new Vector2(132, 13), SpriteEffects.None, 0);
                             }
@@ -145,7 +145,7 @@ namespace NavigField
 
                     arrow.DrawString(SpriteFont1, 
                     "Count of fields:   " + GuidanseFieldSpace1.GetCountOfFields().ToString() + 
-                    "\nCount of active fields:   " + GuidanseFieldSpace1.GetCountOfActiveFields(), new Vector2(0,0), Color.Black);
+                    "\nCount of active fields:   " + GuidanseFieldSpace1.GetCountOfActiveCells(), new Vector2(0,0), Color.Black);
 
             arrow.End();
             // TODO: Add your drawing code here

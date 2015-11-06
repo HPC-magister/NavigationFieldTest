@@ -5,16 +5,15 @@ using System.Text;
 
 namespace NavigField
 {
-    class NavigGridCell : GridCell
+    public class NavigationGridCell : GridCell
     {
         public int iterationsPassed { get; private set; }
         public double pathCost { get; private set; }
 
-        public NavigGridCell()
+        public NavigationGridCell()
         {
             iterationsPassed = 0;
             pathCost = 0;
-            amplitude = 0;
         }
     }
 }
