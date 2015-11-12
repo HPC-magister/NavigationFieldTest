@@ -7,13 +7,43 @@ namespace NavigField
 {
     public class NavigationGridCell : GridCell
     {
-        public int iterationsPassed { get; private set; }
-        public double pathCost { get; private set; }
+        public int iterationsPassed { get; set; }
+        private double pathCst;
+        public double pathCost
+        {
+            get
+            {
+                return pathCst;
+            }
+            set
+            {
+                pathCst = value;
+                if (pathCst == Double.PositiveInfinity)
+                    isObstcl = true;
+                else
+                    isObstcl = false;
+            }   
+        }
+
+        public int xPredecessor { get; set; }
+        public int yPredecessor { get; set; }
+
+        private bool isObstcl;
+        public new bool isObstacle
+        {
+            get { return isObstcl; }
+        }
+
 
         public NavigationGridCell()
         {
-            iterationsPassed = 0;
+            iterationsPassed = 0;            
             pathCost = 0;
+        }
+
+        public int Update()
+        {
+            return 0;
         }
     }
 }

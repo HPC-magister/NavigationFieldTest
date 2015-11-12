@@ -7,7 +7,7 @@ namespace NavigField
 {
     public class FieldSpace
     {             
-        public GridCell[,] FieldArray { get; protected set; }
+        public GridCell[,] FieldArray { get; set; }
         public int xSize { get; protected set; }
         public int ySize { get; protected set; }
 

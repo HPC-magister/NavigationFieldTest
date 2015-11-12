@@ -57,7 +57,6 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="GridCell.cs" />
     <Compile Include="FieldSpace.cs" />
     <Compile Include="NavigationFieldSpace.cs" />
