@@ -32,6 +32,14 @@ namespace NavigField
         public new bool isObstacle
         {
             get { return isObstcl; }
+            set
+            {
+                isObstcl = value;
+                if (isObstcl)
+                    pathCst = Double.PositiveInfinity;
+                else
+                    pathCst = 0;
+            }
         }
 
 

@@ -28,51 +28,7 @@ namespace NavigField
         FieldSpace GuidanseFieldSpace1;
         NavigationFieldSpace NavigationFieldSpace1;
 
-        public delegate int Del(int xCurrent, int yCurrent, int xIsCalculated, int yIsCalculated, int countOfSubIterations);
-
-        public int costMinFinder(int xIsCalculated, int yIsCalculated, int param3, int param4, int countOfSubIterations)
-        {
-            Del costCreatorDel = costCreator;
-
-
-            Indexer(costCreatorDel, xIsCalculated, yIsCalculated, countOfSubIterations, 0);
-
-            return 0;
-        }
-
-        public int costCreator(int xCurrent, int yCurrent, int xIsCalculated, int yIsCalculated, int param5)
-        {
-            if (NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].iterationsPassed > 0
-                && NavigationFieldSpace1.FieldArray[xCurrent, yCurrent].iterationsPassed > 0)
-            {
-                if (NavigationFieldSpace1.FieldArray[xCurrent, yCurrent].pathCost
-                < NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].pathCost)
-                {
-                    NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].pathCost
-                        = NavigationFieldSpace1.FieldArray[xCurrent, yCurrent].pathCost + 1;
-
-                    NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].iterationsPassed++;
-                    NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].xPredecessor = xCurrent;
-                    NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].yPredecessor = yCurrent;
-                }
-            }
-            else
-                if (NavigationFieldSpace1.FieldArray[xCurrent, yCurrent].iterationsPassed > 0)
-                {
-                    NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].pathCost
-                    = NavigationFieldSpace1.FieldArray[xCurrent, yCurrent].pathCost + 1;
-
-                    NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].iterationsPassed++;
-                    NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].xPredecessor = xCurrent;
-                    NavigationFieldSpace1.FieldArray[xIsCalculated, yIsCalculated].yPredecessor = yCurrent;
-                }
-
-                
-            
-
-
-            return 0;
-        }
+        
 
         public Game1()
         {            
@@ -91,7 +47,6 @@ namespace NavigField
             arrowDestination = new Rectangle(200, 200, 100, 10);
 
             bckgrColor = Color.Gray;
-            double PI = Math.PI;
                         
             GuidanseFieldSpace1 = new FieldSpace(3, 3);
 
@@ -101,19 +56,7 @@ namespace NavigField
                 for (int j = 0; j < 10; j++)
                     GuidanseFieldSpace1.UpdateCell(false, i, j, random.Next(), 5);
             
-            NavigationFieldSpace1 = new NavigationFieldSpace(10, 9);/*
-            NavigationFieldSpace1.FieldArray[0, 0].pathCost = Double.PositiveInfinity;
-            NavigationFieldSpace1.FieldArray[1, 1].pathCost = Double.PositiveInfinity;
-            NavigationFieldSpace1.FieldArray[1, 2].pathCost = Double.PositiveInfinity;
-            NavigationFieldSpace1.FieldArray[0, 1].pathCost = Double.PositiveInfinity;
-            NavigationFieldSpace1.FieldArray[0, 1].pathCost = Double.PositiveInfinity;
-            */
-            /*
-            GuidanseFieldSpace1.UpdateCell(true, 0, 1, PI * 3 / 4, 5);
-            GuidanseFieldSpace1.UpdateCell(true, 1, 2, PI * 3 / 4, 5);
-            GuidanseFieldSpace1.UpdateCell(true, 2, 1, PI * 3 / 4, 5);
-            */
-
+            NavigationFieldSpace1 = new NavigationFieldSpace(10, 9);
 
             base.Initialize();
         }
@@ -155,16 +98,31 @@ namespace NavigField
                 "Count of fields:   " + GuidanseFieldSpace1.GetCountOfFields().ToString() + 
                 "\nCount of active fields:   " + GuidanseFieldSpace1.GetCountOfActiveCells(), new Vector2(0,0), Color.Black);
 
-                Del handler = costMinFinder;
-                NavigationFieldSpace1.FieldArray[5, 5].pathCost = 5;
+                NavigationFieldSpace1.CalculateFieldForAim(7, 7);
 
-                int xAimIndex = 5, yAimIndex = 5;
-                NavigationFieldSpace1.FieldArray[xAimIndex, yAimIndex].iterationsPassed = 1;
+                int xDrawCoord = 50;
+                int yDrawCoord = 50;
 
-                int maxDistToBorder = Math.Max(Math.Max((NavigationFieldSpace1.xSize - 1) - xAimIndex, xAimIndex),
-                                          Math.Max((NavigationFieldSpace1.ySize - 1) - yAimIndex, yAimIndex));
+                int dist = 50;
 
-                Indexer(handler, xAimIndex, yAimIndex, maxDistToBorder, 1);
+                for (int x = 0; x < NavigationFieldSpace1.xSize; x++)
+                    for (int y = 0; y < NavigationFieldSpace1.ySize; y++)
+                    {
+                        arrowDestination = new Rectangle(xDrawCoord + x * dist, yDrawCoord + y * dist,
+                            (int)NavigationFieldSpace1.FieldArray[x, y].amplitude * 10,
+                            (int)NavigationFieldSpace1.FieldArray[x, y].amplitude);
+                        arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor,
+                            (float)NavigationFieldSpace1.FieldArray[x, y].angle,
+                            new Vector2(132, 13), SpriteEffects.None, 0);
+
+                        if (!NavigationFieldSpace1.FieldArray[x, y].isObstacle)
+                            arrow.DrawString(SpriteFont1,
+                            NavigationFieldSpace1.FieldArray[x, y].pathCost.ToString(),
+                            new Vector2(xDrawCoord + x * dist + 15, yDrawCoord + y * dist + 15), Color.Black);
+                        else
+                            arrow.DrawString(SpriteFont1, "inf",
+                            new Vector2(xDrawCoord + x * dist + 15, yDrawCoord + y * dist + 15), Color.Black);
+                    }
 
             arrow.End();
             // TODO: Add your drawing code here
@@ -173,68 +131,5 @@ namespace NavigField
             
         }
 
-        public int Indexer(Del handler, int xAimIndex, int yAimIndex, int countOfIterations, int countOfSubIterations)
-        {
-            
-            for (int i = 1; i <= countOfIterations; i++)
-            {
-                int onSideCellsToDraw = 2 * i;
-
-                int xBeginIndex = xAimIndex + i;
-                int yBeginIndex = yAimIndex + i;
-
-                int x = xBeginIndex, y = yBeginIndex;
-
-                int[] kxky = new int[] { 0, -1, 0, 1, 0 };
-
-
-                for (int rectSide = 0; rectSide < 4; rectSide++)
-                {
-                    int kx = kxky[rectSide + 1], ky = kxky[rectSide];
-
-                    for (int dl = 0; dl < onSideCellsToDraw; dl++)
-                    {
-                        x += kx; y += ky;
-
-                        if ((0 <= x) && (x < NavigationFieldSpace1.FieldArray.GetLength(0)) &&
-                            (0 <= y) && (y < NavigationFieldSpace1.FieldArray.GetLength(1)))
-                        {
-                            
-                            if (!NavigationFieldSpace1.FieldArray[x, y].isObstacle)
-                            {                                
-                                handler(x, y, xAimIndex, yAimIndex, countOfSubIterations);
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            int xDrawCoord = 50;
-            int yDrawCoord = 50;
-
-            int dist = 50;
-
-            for (int x = 0; x < NavigationFieldSpace1.xSize; x++)
-                for (int y = 0; y < NavigationFieldSpace1.ySize; y++)
-                {
-                    arrowDestination = new Rectangle(xDrawCoord + x * dist, yDrawCoord + y * dist, 
-                        (int)NavigationFieldSpace1.FieldArray[x, y].amplitude * 10,
-                        (int)NavigationFieldSpace1.FieldArray[x, y].amplitude);
-                    arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, 
-                        (float)NavigationFieldSpace1.FieldArray[x, y].angle, 
-                        new Vector2(132, 13), SpriteEffects.None, 0);
-
-                    if (!NavigationFieldSpace1.FieldArray[x, y].isObstacle)
-                        arrow.DrawString(SpriteFont1,
-                        NavigationFieldSpace1.FieldArray[x, y].pathCost.ToString(),
-                        new Vector2(xDrawCoord + x * dist + 15, yDrawCoord + y * dist + 15), Color.Black);
-                    else
-                        arrow.DrawString(SpriteFont1, "inf",
-                        new Vector2(xDrawCoord + x * dist + 15, yDrawCoord + y * dist + 15), Color.Black);                    
-                }
-
-            return 0;
-        }
     }
 }
