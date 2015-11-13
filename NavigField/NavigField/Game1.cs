@@ -58,6 +58,9 @@ namespace NavigField
             
             NavigationFieldSpace1 = new NavigationFieldSpace(10, 9);
 
+            System.Threading.Thread t = new System.Threading.Thread(thr);
+            t.Start();
+
             base.Initialize();
         }
 
@@ -88,6 +91,11 @@ namespace NavigField
             base.Update(gameTime);
         }
 
+        public void thr()
+        {
+            NavigationFieldSpace1.CalculateFieldForAim(7, 7);
+        }
+
         protected override void Draw(GameTime gameTime)
         {           
             GraphicsDevice.Clear(bckgrColor);
@@ -98,7 +106,7 @@ namespace NavigField
                 "Count of fields:   " + GuidanseFieldSpace1.GetCountOfFields().ToString() + 
                 "\nCount of active fields:   " + GuidanseFieldSpace1.GetCountOfActiveCells(), new Vector2(0,0), Color.Black);
 
-                NavigationFieldSpace1.CalculateFieldForAim(7, 7);
+                
 
                 int xDrawCoord = 50;
                 int yDrawCoord = 50;
@@ -117,7 +125,7 @@ namespace NavigField
 
                         if (!NavigationFieldSpace1.FieldArray[x, y].isObstacle)
                             arrow.DrawString(SpriteFont1,
-                            NavigationFieldSpace1.FieldArray[x, y].pathCost.ToString(),
+                            NavigationFieldSpace1.FieldArray[x, y].calcIterationsPassed.ToString(),
                             new Vector2(xDrawCoord + x * dist + 15, yDrawCoord + y * dist + 15), Color.Black);
                         else
                             arrow.DrawString(SpriteFont1, "inf",
