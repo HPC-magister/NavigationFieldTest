@@ -7,6 +7,7 @@ namespace NavigField
 {
     public class NavigationGridCell : GridCell
     {
+        public bool wasCalculated;
         public int calcIterationsPassed { get; set; }
         private double pathCst;
         public double pathCost

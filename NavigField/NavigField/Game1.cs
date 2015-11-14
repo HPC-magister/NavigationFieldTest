@@ -108,8 +108,8 @@ namespace NavigField
 
                 
 
-                int xDrawCoord = 50;
-                int yDrawCoord = 50;
+                int xDrawCoord = 25;
+                int yDrawCoord = 25;
 
                 int dist = 50;
 
@@ -125,7 +125,7 @@ namespace NavigField
 
                         if (!NavigationFieldSpace1.FieldArray[x, y].isObstacle)
                             arrow.DrawString(SpriteFont1,
-                            NavigationFieldSpace1.FieldArray[x, y].calcIterationsPassed.ToString(),
+                            NavigationFieldSpace1.FieldArray[x,y].calcIterationsPassed.ToString(),
                             new Vector2(xDrawCoord + x * dist + 15, yDrawCoord + y * dist + 15), Color.Black);
                         else
                             arrow.DrawString(SpriteFont1, "inf",
