@@ -7,12 +7,15 @@ namespace NavigField
 {
     public class NavigationFieldSpace : FieldSpace
     {
-        public new NavigationGridCell[,] FieldArray { get; private set; }
+        public new NavigationGridCell[,] NavigFieldArray { get; private set; }
+        public double preferredVelocity { get; set; }
+        public int calcIterationsPassed { get; set; }
+        public int sleepTime;
 
         private delegate int Del(int xCurrent, int yCurrent, int xIsCalculated, int yIsCalculated);
 
 
-        public NavigationFieldSpace(int xSize_tmp = 100, int ySize_tmp = 100)
+        public NavigationFieldSpace(int xSize_tmp = 20, int ySize_tmp = 20)
         {
             xSize = xSize_tmp;
             ySize = ySize_tmp;
@@ -22,38 +25,49 @@ namespace NavigField
 
         public int Clear()
         {            
-            FieldArray = new NavigationGridCell[xSize, ySize];
+            NavigFieldArray = new NavigationGridCell[xSize, ySize];
 
             for (int i = 0; i < xSize; i++)
                 for (int j = 0; j < ySize; j++)
                 {
-                    FieldArray[i, j] = new NavigationGridCell();
+                    NavigFieldArray[i, j] = new NavigationGridCell();
 
-                    this.FieldArray[i, j].xPredecessor = i;
-                    this.FieldArray[i, j].yPredecessor = j;
+                    this.NavigFieldArray[i, j].xPredecessor = i;
+                    this.NavigFieldArray[i, j].yPredecessor = j;
                 }
+
+            this.calcIterationsPassed = 0;
+            this.preferredVelocity = 1;
+            this.sleepTime = 0;
 
             return 0;
         }
 
-        public int CalculateFieldForAim(int xAimIndex, int yAimIndex, int calcIterations = 1, double initCost = 0)
+        public int ClearCalculations()
         {
+            for (int i = 0; i < this.xSize; i++)
+                for (int j = 0; j < this.ySize; j++)
+                    this.NavigFieldArray[i, j].wasCalculated = false;
+            this.calcIterationsPassed = 0;
 
-            this.Clear();
+            return 0;
+        }
 
-            this.FieldArray[xAimIndex, yAimIndex].pathCost = initCost;
-
-            this.FieldArray[xAimIndex, yAimIndex].calcIterationsPassed = 1;
-            this.FieldArray[xAimIndex, yAimIndex].wasCalculated = true;
+        public int CalculateFieldForAim(int xAimIndex, int yAimIndex, double preferredVelocity = 1, int calcIterations = 1, double initCost = 0)
+        {
+            this.ClearCalculations();
+            this.NavigFieldArray[xAimIndex, yAimIndex].isAim = true;
+            this.NavigFieldArray[xAimIndex, yAimIndex].pathCost = initCost;
+            this.preferredVelocity = preferredVelocity;
+            this.NavigFieldArray[xAimIndex, yAimIndex].calcIterationsPassed = 1;
+            this.NavigFieldArray[xAimIndex, yAimIndex].wasCalculated = true;
 
             int maxDistToBorder = Math.Max(Math.Max((this.xSize - 1) - xAimIndex, xAimIndex),
-                                      Math.Max((this.ySize - 1) - yAimIndex, yAimIndex));
-            //maxDistToBorder = 1;
+                                           Math.Max((this.ySize - 1) - yAimIndex, yAimIndex));
+                      
+            this.Indexer(PathFinder, xAimIndex, yAimIndex, maxDistToBorder, calcIterations);
 
-            
-            Indexer(CostCreator, xAimIndex, yAimIndex, maxDistToBorder, 7);
-            
-            
+
             return 0;
         }
 
@@ -61,66 +75,125 @@ namespace NavigField
         {
             int countOfActive = 0;
 
-            foreach (NavigationGridCell e in FieldArray)
+            foreach (NavigationGridCell e in NavigFieldArray)
             {
 
                 if (!e.isObstacle)
                     countOfActive++;
             }
+
+
             return countOfActive;
         }
 
-        private int CostCreator(int xIsCalculated, int yIsCalculated, int param3, int param4)
+        private int PathFinder(int xIsCalculated, int yIsCalculated, int param3, int param4)
         {
-            Indexer(PredecessorFinder, xIsCalculated, yIsCalculated);
+            this.Indexer(PredecessorFinder, xIsCalculated, yIsCalculated);
+                
+            int xPredecessor = this.NavigFieldArray[xIsCalculated, yIsCalculated].xPredecessor;
 
-            int xPredecessor = this.FieldArray[xIsCalculated, yIsCalculated].xPredecessor;
-            int yPredecessor = this.FieldArray[xIsCalculated, yIsCalculated].yPredecessor;
+            int yPredecessor = this.NavigFieldArray[xIsCalculated, yIsCalculated].yPredecessor;
 
-            this.FieldArray[xIsCalculated, yIsCalculated].pathCost
-                = this.FieldArray[xPredecessor, yPredecessor].pathCost +
-                Math.Round(Math.Sqrt(Math.Pow(Math.Abs(xIsCalculated - xPredecessor), 2) +
-                  Math.Pow(Math.Abs(yIsCalculated - yPredecessor), 2)), 2);
+            this.NavigFieldArray[xIsCalculated, yIsCalculated].pathCost
+                = this.CostFromThrough(xIsCalculated, yIsCalculated, xPredecessor, yPredecessor);           
+                        
+            this.NavigFieldArray[xIsCalculated, yIsCalculated].calcIterationsPassed++;
+            System.Threading.Thread.Sleep(this.sleepTime);
 
-            this.FieldArray[xIsCalculated, yIsCalculated].calcIterationsPassed++;
 
             return 0;
         }
 
         private int PredecessorFinder(int xCurrent, int yCurrent, int xIsCalculated, int yIsCalculated)
         {
-            if (this.FieldArray[xCurrent, yCurrent].wasCalculated
+            int xPredecessor = this.NavigFieldArray[xIsCalculated, yIsCalculated].xPredecessor;
+            int yPredecessor = this.NavigFieldArray[xIsCalculated, yIsCalculated].yPredecessor;
+
+            if (this.NavigFieldArray[xCurrent, yCurrent].wasCalculated
                 &&
-                this.FieldArray[xIsCalculated, yIsCalculated].wasCalculated
+                this.NavigFieldArray[xIsCalculated, yIsCalculated].wasCalculated
                 &&
-                this.FieldArray[xCurrent, yCurrent].pathCost
-                < this.FieldArray[this.FieldArray[xIsCalculated, yIsCalculated].xPredecessor,
-                                  this.FieldArray[xIsCalculated, yIsCalculated].yPredecessor]
-                                  .pathCost
+                this.CostFromThrough(xIsCalculated, yIsCalculated, xPredecessor, yPredecessor)
+                > this.CostFromThrough(xIsCalculated, yIsCalculated, xCurrent, yCurrent)
                 ||
-                this.FieldArray[xCurrent, yCurrent].wasCalculated
+                this.NavigFieldArray[xCurrent, yCurrent].wasCalculated
                 &&
-                !(this.FieldArray[xIsCalculated, yIsCalculated].wasCalculated))
+                !(this.NavigFieldArray[xIsCalculated, yIsCalculated].wasCalculated))
                     {
-
-                        this.FieldArray[xIsCalculated, yIsCalculated].xPredecessor = xCurrent;
-                        this.FieldArray[xIsCalculated, yIsCalculated].yPredecessor = yCurrent;
-                        this.FieldArray[xIsCalculated, yIsCalculated].wasCalculated = true;
-
+                        this.NavigFieldArray[xIsCalculated, yIsCalculated].xPredecessor = xCurrent;
+                        this.NavigFieldArray[xIsCalculated, yIsCalculated].yPredecessor = yCurrent;
+                        this.NavigFieldArray[xIsCalculated, yIsCalculated].wasCalculated = true;                        
                     }
+            
                 
-
-
-
-
-
             return 0;
+        }
+
+        private double CostFromThrough(int xIsCalculated, int yIsCalculated, int currentXPredecessor, int currentYPredecessor)
+        {
+
+            double cellDistance = Math.Sqrt(
+                    Math.Pow(Math.Abs(xIsCalculated - currentXPredecessor), 2) +
+                    Math.Pow(Math.Abs(yIsCalculated - currentYPredecessor), 2));
+
+            double guidVector;
+            double a = 0;
+            double PI = Math.PI;
+
+            if (currentXPredecessor - xIsCalculated != 0)
+            {
+                a = Math.Atan(
+                (currentYPredecessor - yIsCalculated) /
+                (currentXPredecessor - xIsCalculated));
+
+                if (currentXPredecessor - xIsCalculated < 0)
+                    a += Math.PI;
+            }
+            else
+                a = Math.Asin((currentYPredecessor - yIsCalculated) / cellDistance);
+
+            if (currentYPredecessor - yIsCalculated == 0)
+                a = Math.Acos((currentXPredecessor - xIsCalculated) / cellDistance);
+
+                this.NavigFieldArray[xIsCalculated, yIsCalculated].angle = a;
+            a -= this.FieldArray[xIsCalculated, yIsCalculated].angle;
+
+            guidVector = this.FieldArray[currentXPredecessor, currentYPredecessor].amplitude;
+
+            double predCellTraversingVelocity = (guidVector * Math.Sin(PI - a) +
+                Math.Sqrt(
+                    Math.Pow(guidVector * Math.Sin(PI - a), 2) -
+                    Math.Pow(guidVector, 2) * Math.Cos(PI - a) +
+                    this.preferredVelocity));
+
+            double predCellTraversingCost = (cellDistance / 2) / predCellTraversingVelocity;
+            
+            guidVector = this.FieldArray[xIsCalculated, yIsCalculated].amplitude;
+
+            double cellTraversingVelocity = (guidVector * Math.Sin(PI - a) +
+                Math.Sqrt(
+                    Math.Pow(guidVector * Math.Sin(PI - a), 2) -
+                    Math.Pow(guidVector, 2) * Math.Cos(PI - a) +
+                    this.preferredVelocity));
+
+            double cellTraversingCost = (cellDistance / 2) / cellTraversingVelocity;
+
+
+            this.NavigFieldArray[xIsCalculated, yIsCalculated].amplitude = cellTraversingVelocity;
+            this.NavigFieldArray[currentXPredecessor, currentYPredecessor].amplitude = predCellTraversingVelocity;            
+
+            return Math.Round( (this.NavigFieldArray[currentXPredecessor, currentYPredecessor]
+                    .pathCost + cellTraversingCost + predCellTraversingCost), 2);
         }
 
         private int Indexer(Del handler, int xAimIndex, int yAimIndex, int calculatingRadius = 1, int calcIterations = 1)
         {
-                        
+
             for (int iteration = 1; iteration <= calcIterations; iteration++)
+            {
+                if (handler == PathFinder)
+                    this.calcIterationsPassed++;
+
                 for (int radius = 1; radius <= calculatingRadius; radius++)
                 {
                     int onSideCellsToDraw = 2 * radius;
@@ -141,11 +214,11 @@ namespace NavigField
                         {
                             x += kx; y += ky;
 
-                            if ((0 <= x) && (x < this.FieldArray.GetLength(0)) &&
-                                (0 <= y) && (y < this.FieldArray.GetLength(1)))
+                            if ((0 <= x) && (x < this.NavigFieldArray.GetLength(0)) &&
+                                (0 <= y) && (y < this.NavigFieldArray.GetLength(1)))
                             {
 
-                                if (!this.FieldArray[x, y].isObstacle)
+                                if (!this.NavigFieldArray[x, y].isObstacle)
                                 {
                                     handler(x, y, xAimIndex, yAimIndex);
                                 }
@@ -153,14 +226,11 @@ namespace NavigField
                         }
                     }
                 }
-
-
+            }
 
 
             return 0;
         }
-
         
-
     }
 }

@@ -1,2 +1,0 @@
-Content\arrow.xnb
-Content\SpriteFont1.xnb

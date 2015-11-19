@@ -4,4 +4,3 @@ Q:\НИРМ\Код\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFi
 C:\Users\magistr\Desktop\HPC-magister\Код\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache
 V:\НИРМ\Код\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache
 J:\НИРМ\Код\NavigField\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache
-T:\Projects\NavigationFieldTest\NavigField\NavigFieldContent\obj\x86\Debug\NavigFieldContent.contentprojResolveAssemblyReference.cache

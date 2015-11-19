@@ -7,8 +7,10 @@ namespace NavigField
 {
     public class NavigationGridCell : GridCell
     {
+        public bool isTraversable;
+        public bool isAim;
         public bool wasCalculated;
-        public int calcIterationsPassed { get; set; }
+        public int calcIterationsPassed { get; set; }        
         private double pathCst;
         public double pathCost
         {
@@ -48,6 +50,7 @@ namespace NavigField
         {
             calcIterationsPassed = 0;            
             pathCost = 0;
+            isTraversable = true;
         }
 
         public int Update()

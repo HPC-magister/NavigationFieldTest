@@ -10,13 +10,13 @@ namespace NavigField
         public int xPos { get; protected set; }
         public int yPos { get; protected set; }
 
-        public double angle { get; protected set; }
-        public double amplitude { get; protected set; }
+        public double angle { get; set; }
+        public double amplitude { get; set; }
 
         public bool isObstacle { get; set; }
                
 
-        public GridCell(bool isObstcl = true, int x = 0, int y = 0, double angle_tmp = 0, double amplitude_tmp = 0)
+        public GridCell(bool isObstcl = false, int x = 0, int y = 0, double angle_tmp = 0, double amplitude_tmp = 0)
         {
             isObstacle = isObstcl;
             xPos = x;
