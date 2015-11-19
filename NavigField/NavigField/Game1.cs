@@ -57,7 +57,7 @@ namespace NavigField
             this.Window.Title = "Navigation Field";
             this.IsMouseVisible = true;
 
-            arrowSource = new Rectangle(0, 0, 126, 27);
+            arrowSource = new Rectangle(0, 0, 71, 27);
             aimSource = new Rectangle(0, 0, 100, 100);
             obstacleSource = new Rectangle(0, 0, 100, 100);
 
@@ -74,7 +74,7 @@ namespace NavigField
             NavigationFieldSpace1 = new NavigationFieldSpace();
 
             System.Threading.Thread t = new System.Threading.Thread(thr);
-            NavigationFieldSpace1.sleepTime = 0;
+            NavigationFieldSpace1.sleepTime = 1;
             t.Start();
 
 
@@ -114,14 +114,31 @@ namespace NavigField
         }
 
         public void thr()
-        {/*
-            NavigationFieldSpace1.FieldArray[7, 3].amplitude = 1;
-            NavigationFieldSpace1.FieldArray[8, 3].amplitude = 1;
-            NavigationFieldSpace1.FieldArray[6, 3].amplitude = 1;
+        {
+            /*
+            NavigationFieldSpace1.FieldArray[7, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[8, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[6, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[9, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[10, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[11, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[12, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[13, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[14, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[15, 3].amplitude = 0.99;
+            NavigationFieldSpace1.FieldArray[16, 3].amplitude = 0.99;
             NavigationFieldSpace1.FieldArray[7, 3].angle = -Math.PI / 2;
             NavigationFieldSpace1.FieldArray[8, 3].angle = -Math.PI / 2;
+            NavigationFieldSpace1.FieldArray[6, 3].angle = -Math.PI / 2;
             NavigationFieldSpace1.FieldArray[9, 3].angle = -Math.PI / 2;
-            */
+            NavigationFieldSpace1.FieldArray[10, 3].angle = -Math.PI / 2;
+            NavigationFieldSpace1.FieldArray[11, 3].angle = -Math.PI / 2;
+            NavigationFieldSpace1.FieldArray[12, 3].angle = -Math.PI / 2;
+            NavigationFieldSpace1.FieldArray[13, 3].angle = -Math.PI / 2;
+            NavigationFieldSpace1.FieldArray[14, 3].angle = -Math.PI / 2;
+            NavigationFieldSpace1.FieldArray[15, 3].angle = -Math.PI / 2;
+            NavigationFieldSpace1.FieldArray[16, 3].angle = -Math.PI / 2;
+
             NavigationFieldSpace1.NavigFieldArray[7, 11].isObstacle = true;
             NavigationFieldSpace1.NavigFieldArray[8, 11].isObstacle = true;
             NavigationFieldSpace1.NavigFieldArray[9, 11].isObstacle = true;
@@ -139,8 +156,49 @@ namespace NavigField
             NavigationFieldSpace1.NavigFieldArray[11, 14].isObstacle = true;
             NavigationFieldSpace1.NavigFieldArray[11, 15].isObstacle = true;
             NavigationFieldSpace1.NavigFieldArray[11, 16].isObstacle = true;
+            
+            */
 
-            NavigationFieldSpace1.CalculateFieldForAim(7, 7, 1, 5);
+
+            double sin = 0.5;
+            double a0 = Math.PI / 2;
+            /*
+            for (int i = 0; i < 15; i += 3)
+            {
+
+
+                
+
+
+                if (i != 9)
+                    a0 -= Math.PI / 4;
+                else
+                {
+                    a0 = 0;
+
+                }
+                if (i == 12)
+                    a0 = Math.PI / 4;
+
+                sin = Math.Sin(a0);
+                a0 = Math.Asin(sin);
+
+                */
+                double[] a = { Math.PI / 4, Math.PI / 4, Math.PI / 4, 0, 0, 0, -Math.PI / 4, -Math.PI / 4, -Math.PI / 4, 0, 0, 0, Math.PI / 4, Math.PI / 4, Math.PI / 4 };
+                int[] dy = { 1, 2, 3, 4, 5, 4, 3, 2, 1, 1, 0, 1, 1, 2, 3 };
+
+            for (int x = 0; x < 15; x++)
+                for (int y = 0 + dy[x]; y < 10 + dy[x]; y++)
+                {
+                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].angle = a[x];
+                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].amplitude = 0.99;
+                }
+          //  }
+
+            
+
+
+                    NavigationFieldSpace1.CalculateFieldForAim(1, 9, 1, 50);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -183,9 +241,9 @@ namespace NavigField
 
                             continue;
                         }
-                        
-                        arrowDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 20, 5);
-                        arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)NavigationGridCell1.angle, new Vector2(63, 13), SpriteEffects.None, 0);
+                        var v = (int)Math.Round(20.0 * NavigationGridCell1.amplitude / NavigationFieldSpace1.preferredVelocity);
+                        arrowDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 25 + 0*(int)Math.Round(25 * NavigationGridCell1.amplitude / NavigationFieldSpace1.preferredVelocity), 10);
+                        arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)NavigationGridCell1.angle, new Vector2(35, 13), SpriteEffects.None, 0);
 
                     
                     }

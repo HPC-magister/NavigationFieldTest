@@ -156,33 +156,38 @@ namespace NavigField
                 a = Math.Acos((currentXPredecessor - xIsCalculated) / cellDistance);
 
                 this.NavigFieldArray[xIsCalculated, yIsCalculated].angle = a;
-            a -= this.FieldArray[xIsCalculated, yIsCalculated].angle;
+            a -= this.FieldArray[currentXPredecessor, currentYPredecessor].angle;
 
             guidVector = this.FieldArray[currentXPredecessor, currentYPredecessor].amplitude;
 
-            double predCellTraversingVelocity = (guidVector * Math.Sin(PI - a) +
+            double predCellTraversingVelocity = (( guidVector * Math.Cos(a) ) +
                 Math.Sqrt(
-                    Math.Pow(guidVector * Math.Sin(PI - a), 2) -
-                    Math.Pow(guidVector, 2) * Math.Cos(PI - a) +
+                    Math.Pow(guidVector * Math.Cos(a), 2) -
+                    Math.Pow(guidVector, 2) +
                     this.preferredVelocity));
 
+            predCellTraversingVelocity = (predCellTraversingVelocity > 1) ? 1 : predCellTraversingVelocity;
             double predCellTraversingCost = (cellDistance / 2) / predCellTraversingVelocity;
-            
+
+            a = this.NavigFieldArray[xIsCalculated, yIsCalculated].angle;
+            a -= this.FieldArray[xIsCalculated, yIsCalculated].angle;
             guidVector = this.FieldArray[xIsCalculated, yIsCalculated].amplitude;
 
-            double cellTraversingVelocity = (guidVector * Math.Sin(PI - a) +
+            double cellTraversingVelocity = ((guidVector * Math.Cos(a)) +
                 Math.Sqrt(
-                    Math.Pow(guidVector * Math.Sin(PI - a), 2) -
-                    Math.Pow(guidVector, 2) * Math.Cos(PI - a) +
+                    Math.Pow(guidVector * Math.Cos(a), 2) -
+                    Math.Pow(guidVector, 2) +
                     this.preferredVelocity));
+
+            cellTraversingVelocity = (cellTraversingVelocity > 1) ? 1 : cellTraversingVelocity;
 
             double cellTraversingCost = (cellDistance / 2) / cellTraversingVelocity;
 
 
             this.NavigFieldArray[xIsCalculated, yIsCalculated].amplitude = cellTraversingVelocity;
-            this.NavigFieldArray[currentXPredecessor, currentYPredecessor].amplitude = predCellTraversingVelocity;            
 
-            return Math.Round( (this.NavigFieldArray[currentXPredecessor, currentYPredecessor]
+
+            return Math.Round((this.NavigFieldArray[currentXPredecessor, currentYPredecessor]
                     .pathCost + cellTraversingCost + predCellTraversingCost), 2);
         }
 
