@@ -15,7 +15,7 @@ namespace NavigField
         private delegate int Del(int xCurrent, int yCurrent, int xIsCalculated, int yIsCalculated);
 
 
-        public NavigationFieldSpace(int xSize_tmp = 20, int ySize_tmp = 20)
+        public NavigationFieldSpace(int xSize_tmp = 100, int ySize_tmp =100)
         {
             xSize = xSize_tmp;
             ySize = ySize_tmp;
@@ -138,7 +138,6 @@ namespace NavigField
 
             double guidVector;
             double a = 0;
-            double PI = Math.PI;
 
             if (currentXPredecessor - xIsCalculated != 0)
             {

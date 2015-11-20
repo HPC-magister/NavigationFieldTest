@@ -38,8 +38,7 @@ namespace NavigField
                 
         FieldSpace GuidanseFieldSpace1;
         NavigationFieldSpace NavigationFieldSpace1;
-
-        
+     
 
         public Game1()
         {            
@@ -71,10 +70,10 @@ namespace NavigField
                 for (int j = 0; j < 10; j++)
                     GuidanseFieldSpace1.UpdateCell(false, i, j, 0 * Math.PI/4, 0);
                         
-            NavigationFieldSpace1 = new NavigationFieldSpace();
+            NavigationFieldSpace1 = new NavigationFieldSpace(50, 30);
 
             System.Threading.Thread t = new System.Threading.Thread(thr);
-            NavigationFieldSpace1.sleepTime = 1;
+            NavigationFieldSpace1.sleepTime = 10;
             t.Start();
 
 
@@ -184,21 +183,49 @@ namespace NavigField
                 a0 = Math.Asin(sin);
 
                 */
-                double[] a = { Math.PI / 4, Math.PI / 4, Math.PI / 4, 0, 0, 0, -Math.PI / 4, -Math.PI / 4, -Math.PI / 4, 0, 0, 0, Math.PI / 4, Math.PI / 4, Math.PI / 4 };
-                int[] dy = { 1, 2, 3, 4, 5, 4, 3, 2, 1, 1, 0, 1, 1, 2, 3 };
+                double[] a = { Math.PI / 4, Math.PI / 4, Math.PI / 4, Math.PI / 4, Math.PI / 4, Math.PI / 4,
+                                0, 0, 0, 0, 0 -Math.PI / 4, -Math.PI / 4, -Math.PI / 4, -Math.PI / 4, 0, 0, 0};
+                int[] dy = { 1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 4, 3, 3, 2, 2, 1, 1, 1 };
 
-            for (int x = 0; x < 15; x++)
-                for (int y = 0 + dy[x]; y < 10 + dy[x]; y++)
+            for (int x = 0; x < 17; x++)
+                for (int y = 0 + dy[x]; y < 21 + dy[x]; y++)
                 {
                     NavigationFieldSpace1.FieldArray[x + 3, y + 3].angle = a[x];
-                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].amplitude = 0.99;
+                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].amplitude = 0.7;
                 }
-          //  }
+            
+            for (int x = 17; x < 22; x++)
+                for (int y = 0 + dy[x - 17]; y < 21 + dy[x - 17]; y++)
+                {
+                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].angle = a[x - 17];
+                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].amplitude = 0.7;
+                }
+            //  }
+            /*
+
+            Creating complex-aim cost propagating algoritm
+
+            int xAimIndex = 1;
+            int yAimIndex = 10;
+
+            NavigationFieldSpace1.NavigFieldArray[xAimIndex, yAimIndex].isAim = true;
+            NavigationFieldSpace1.NavigFieldArray[xAimIndex, yAimIndex].pathCost = 0;
+            
+            NavigationFieldSpace1.NavigFieldArray[xAimIndex, yAimIndex].calcIterationsPassed = 1;
+            NavigationFieldSpace1.NavigFieldArray[xAimIndex, yAimIndex].wasCalculated = true;
+
+            xAimIndex = 1;
+            yAimIndex = 11;
+
+            NavigationFieldSpace1.NavigFieldArray[xAimIndex, yAimIndex].isAim = true;
+            NavigationFieldSpace1.NavigFieldArray[xAimIndex, yAimIndex].pathCost = 0;
+
+            NavigationFieldSpace1.NavigFieldArray[xAimIndex, yAimIndex].calcIterationsPassed = 1;
+            NavigationFieldSpace1.NavigFieldArray[xAimIndex, yAimIndex].wasCalculated = true;
+            */
+            NavigationFieldSpace1.CalculateFieldForAim(1, 14, 1, 50);
 
             
-
-
-                    NavigationFieldSpace1.CalculateFieldForAim(1, 9, 1, 50);
         }
 
         protected override void Draw(GameTime gameTime)
@@ -207,6 +234,7 @@ namespace NavigField
 
             arrow.Begin();
             aim.Begin();
+            
             obstacle.Begin();            
 
                 arrow.DrawString(SpriteFont1, 
@@ -216,8 +244,10 @@ namespace NavigField
 
                 int xDrawCoord = 25;
                 int yDrawCoord = 25;
+                
+                int dist = 20;
 
-                int dist = 35;
+            
                       
             
                 for (int i = 0; i < NavigationFieldSpace1.xSize; i++)
@@ -228,7 +258,7 @@ namespace NavigField
 
                         if (NavigationGridCell1.isAim)
                         {
-                            aimDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 20, 20);
+                            aimDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 10, 10);
                             aim.Draw(aimTexture, aimDestination, aimSource, bckgrColor, 0, new Vector2(50, 50), SpriteEffects.None, 0);
 
                             continue;
@@ -236,13 +266,13 @@ namespace NavigField
 
                         if (NavigationGridCell1.isObstacle)
                         {
-                            obstacleDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 20, 20);
+                            obstacleDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 10, 10);
                             obstacle.Draw(obstacleTexture, obstacleDestination, obstacleSource, bckgrColor, 0, new Vector2(50, 50), SpriteEffects.None, 0);
 
                             continue;
                         }
                         var v = (int)Math.Round(20.0 * NavigationGridCell1.amplitude / NavigationFieldSpace1.preferredVelocity);
-                        arrowDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 25 + 0*(int)Math.Round(25 * NavigationGridCell1.amplitude / NavigationFieldSpace1.preferredVelocity), 10);
+                        arrowDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 15 + 0*(int)Math.Round(15 * NavigationGridCell1.amplitude / NavigationFieldSpace1.preferredVelocity), 10);
                         arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)NavigationGridCell1.angle, new Vector2(35, 13), SpriteEffects.None, 0);
 
                     
