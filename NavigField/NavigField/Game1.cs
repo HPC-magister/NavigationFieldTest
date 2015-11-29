@@ -71,9 +71,10 @@ namespace NavigField
                     GuidanseFieldSpace1.UpdateCell(false, i, j, 0 * Math.PI/4, 0);
                         
             NavigationFieldSpace1 = new NavigationFieldSpace(50, 30);
+            NavigationFieldSpace1.sleepTime = 0;
 
             System.Threading.Thread t = new System.Threading.Thread(thr);
-            NavigationFieldSpace1.sleepTime = 10;
+            
             t.Start();
 
 
@@ -114,7 +115,9 @@ namespace NavigField
 
         public void thr()
         {
-            /*
+            int bx = 25;
+            int by = 11;
+
             NavigationFieldSpace1.FieldArray[7, 3].amplitude = 0.99;
             NavigationFieldSpace1.FieldArray[8, 3].amplitude = 0.99;
             NavigationFieldSpace1.FieldArray[6, 3].amplitude = 0.99;
@@ -137,27 +140,27 @@ namespace NavigField
             NavigationFieldSpace1.FieldArray[14, 3].angle = -Math.PI / 2;
             NavigationFieldSpace1.FieldArray[15, 3].angle = -Math.PI / 2;
             NavigationFieldSpace1.FieldArray[16, 3].angle = -Math.PI / 2;
-
-            NavigationFieldSpace1.NavigFieldArray[7, 11].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[8, 11].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[9, 11].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[10, 11].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[11, 11].isObstacle = true;
-
-            NavigationFieldSpace1.NavigFieldArray[7, 12].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[7, 13].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[7, 14].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[7, 15].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[7, 16].isObstacle = true;
-
-            NavigationFieldSpace1.NavigFieldArray[11, 12].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[11, 13].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[11, 14].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[11, 15].isObstacle = true;
-            NavigationFieldSpace1.NavigFieldArray[11, 16].isObstacle = true;
             
-            */
+            NavigationFieldSpace1.NavigFieldArray[bx + 7, by + 11].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 8, by + 11].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 9, by + 11].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 10, by + 11].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 11, by + 11].isObstacle = true;
 
+            NavigationFieldSpace1.NavigFieldArray[bx + 7, by + 12].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 7, by + 13].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 7, by + 14].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 7, by + 15].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 7, by + 16].isObstacle = true;
+
+            NavigationFieldSpace1.NavigFieldArray[bx + 11, by + 12].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 11, by + 13].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 11, by + 14].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 11, by + 15].isObstacle = true;
+            NavigationFieldSpace1.NavigFieldArray[bx + 11, by + 16].isObstacle = true;
+            
+            
+            
 
             double sin = 0.5;
             double a0 = Math.PI / 2;
@@ -188,17 +191,19 @@ namespace NavigField
                 int[] dy = { 1, 1, 2, 2, 3, 3, 4, 4, 4, 4, 4, 3, 3, 2, 2, 1, 1, 1 };
 
             for (int x = 0; x < 17; x++)
-                for (int y = 0 + dy[x]; y < 21 + dy[x]; y++)
+                for (int y = 0 + dy[x]; y < 11 + dy[x]; y++)
                 {
-                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].angle = a[x];
-                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].amplitude = 0.7;
+                    NavigationFieldSpace1.FieldArray[x + 3, y + 7].angle = a[x];
+                    NavigationFieldSpace1.FieldArray[x + 3, y + 7].amplitude 
+                        = 0.99 * Math.Abs(Math.Abs(y - dy[x] - 5) - 6) / 6;
                 }
             
             for (int x = 17; x < 22; x++)
-                for (int y = 0 + dy[x - 17]; y < 21 + dy[x - 17]; y++)
+                for (int y = 0 + dy[x - 17]; y < 11 + dy[x - 17]; y++)
                 {
-                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].angle = a[x - 17];
-                    NavigationFieldSpace1.FieldArray[x + 3, y + 3].amplitude = 0.7;
+                    NavigationFieldSpace1.FieldArray[x + 3, y + 7].angle = a[x - 17];
+                    NavigationFieldSpace1.FieldArray[x + 3, y + 7].amplitude 
+                        = 0.99 * Math.Abs(Math.Abs(y - dy[x - 17] - 5) - 6) / 6;
                 }
             //  }
             /*
@@ -271,15 +276,15 @@ namespace NavigField
 
                             continue;
                         }
-                        var v = (int)Math.Round(20.0 * NavigationGridCell1.amplitude / NavigationFieldSpace1.preferredVelocity);
-                        arrowDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 15 + 0*(int)Math.Round(15 * NavigationGridCell1.amplitude / NavigationFieldSpace1.preferredVelocity), 10);
+                        //var v = (int)Math.Round(20.0 * GridCell1.amplitude / NavigationFieldSpace1.preferredVelocity);
+                        arrowDestination = new Rectangle(xDrawCoord + i * dist, yDrawCoord + j * dist, 15 + 0 * (int)Math.Round(15 * NavigationGridCell1.amplitude / NavigationFieldSpace1.preferredVelocity), 10);
                         arrow.Draw(arrowTexture, arrowDestination, arrowSource, bckgrColor, (float)NavigationGridCell1.angle, new Vector2(35, 13), SpriteEffects.None, 0);
 
                     
                     }
                 
-        /*
-                    
+        
+                    /*
                         for (int x = 0; x < NavigationFieldSpace1.xSize; x++)
                             for (int y = 0; y < NavigationFieldSpace1.ySize; y++)
                             {
